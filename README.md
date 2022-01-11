@@ -1,18 +1,2 @@
-Hello, My Friends  
-Thank you for having interest in this repository ! 
-
-To use this application, 
-
-1. make dev.js file inside config folder 
-2. put mongoDB info into dev.js file 
-3. Type  " npm install " inside the root directory  ( Download Server Dependencies ) 
-4. Type " npm install " inside the client directory ( Download Front-end Dependencies )
-
-
-If you have problem, feel free to ask me ^^ 
-
-You can watch the tutorial for this app.
-
-https://www.youtube.com/channel/UCFyXA9x8lpL3EYWeYhj4C4Q?view_as=subscriber
-
-
+사이드 메뉴와 강의 목록 페이지, 강의 세부 페이지 중 일부는 백엔드와 프론트엔드 모두 구현되있구요
+강의 세부페이지에서 강의 신청하는 부분과 강의 동영상, 과제 제출글이 올라오는 부분은 아직 구현중입니다.
