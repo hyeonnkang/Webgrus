@@ -146,7 +146,7 @@ function LectureUploadPage(props) {
                     </Dropzone>
                     { LectureFilePath &&
                       <div style={{ display: 'flex', maxHeight: '500px', maxWidth: '700px' }}>
-                        <img src={`http://localhost:5000/${LectureFilePath}`} alt="thumanail_lecuture" />
+                        <img src={`http://localhost:3001/${LectureFilePath}`} alt="thumanail_lecuture" />
                       </div>
                     }
                   </div>

@@ -90,7 +90,7 @@ function LectureDetailPage(props) {
               <Title level={2} style={{ marginTop: '25px' }}> {LectureDetail.title} </Title>
               <Divider />
               <br />
-              <img style={{ width: '50%'}} src={`http://localhost:5000/${LectureDetail.filePath}`} controls />
+              <img style={{ width: '50%'}} src={`http://localhost:3001/${LectureDetail.filePath}`} controls />
               <br />
               <Divider><h2>Lecturer</h2></Divider>
               <List.Item actions>

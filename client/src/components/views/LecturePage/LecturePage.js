@@ -31,7 +31,7 @@ function LecturePage(props) {
             return <Col lg={6} md={8} xs={24} key={index}>
               <a href={`/lectures/${lectures._id}`}>
                 <div>
-                  <img style={{ width: '100%' }} src={`http://localhost:5000/${lectures.filePath}`} />
+                  <img style={{ width: '100%' }} src={`http://localhost:3001/${lectures.filePath}`} />
                 </div>
                 <br />
                 <span><h2>{lectures.title}</h2></span>
