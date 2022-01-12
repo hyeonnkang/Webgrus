@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Skeleton, Divider, Tooltip, message } from 'antd';
+import { Button, Skeleton, Divider, Tooltip, message, Col, Card, Avatar, Row } from 'antd';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import { useDispatch } from "react-redux";
@@ -9,6 +9,9 @@ function LectureApplicationButton(props) {
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
   const [LectureApplicants, setLectureApplicants] = useState(0)
   const [AppliedLecture, setAppliedLecture] = useState(false)
+  const [LectureApplicantsInfo, setLectureApplicantsInfo] = useState([])
+
+  const { Meta } = Card;
 
   const StatusUpdate = () => {
     let updateVariable = {
@@ -37,7 +40,10 @@ function LectureApplicationButton(props) {
   useEffect(() => {
     axios.post('/api/lectureApplication/getLectureApplicants', applicantsVariable).then(response => {
       if (response.data.success) {
-        setLectureApplicants(response.data.Applicants)
+        setLectureApplicants(response.data.Apply)
+        setLectureApplicantsInfo(response.data.ApplicantsInfo)
+        console.log(LectureApplicantsInfo)
+        console.log(response.data.ApplicantsInfo)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
         props.history.push('/lectures')
@@ -89,11 +95,27 @@ function LectureApplicationButton(props) {
     }
   }
 
-  if (ThisLecture) {
+  if (ThisLecture && LectureApplicantsInfo) {
     if (localStorage.getItem('userId') === ThisLecture.teacher._id) {
       return (
-        <div>
-          <h3>아직 미구현</h3>
+        <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+        <Divider><h2>Application</h2></Divider>
+        <br />
+        <Row gutter={[8, 8]}>
+          {LectureApplicantsInfo.map((applicants, index) => {
+            return <Col xs={24} key={index}>
+              <div style={{ display: 'grid', gridTemplateColumns: '0.25fr 1fr 2fr' }}>
+                <div />
+                <Meta avatar={<Avatar src={applicants.ApplicantInfo.image} />}
+                title={applicants.ApplicantInfo.name} description="" />
+                <h3 style={{ position: 'relative', bottom: '4px' }}>
+                Contact - {applicants.ApplicantInfo.email} / 0{applicants.ApplicantInfo.phonenumber}</h3>
+              </div>
+            </Col>
+          })}
+        </Row>
+        <br />
+        <Divider />
         </div>
       )
     } else if (ThisLecture.applicationPeriod === true) {

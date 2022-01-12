@@ -6,9 +6,9 @@ const { Lecture } = require("../models/Lecture");
 const { auth } = require("../middleware/auth");
 
 router.post('/getLectureApplicants', (req, res) => {
-  LectureApplication.find({ LectureId: req.body.LectureId }).exec((err, application) => {
+  LectureApplication.find({ LectureId: req.body.LectureId }).populate('ApplicantInfo').exec((err, application) => {
     if (err) return res.status(400).send(err)
-    return res.status(200).json({ success: true, Applicants: application.length })
+    return res.status(200).json({ success: true, Apply: application.length, ApplicantsInfo: application  })
     })
 })
 

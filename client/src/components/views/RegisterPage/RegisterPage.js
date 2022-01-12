@@ -45,7 +45,7 @@ function RegisterPage(props) {
     <Formik
       initialValues={{
         email: '',
-        lastName: '',
+        phonenumber: '',
         name: '',
         password: '',
         confirmPassword: ''
@@ -53,8 +53,9 @@ function RegisterPage(props) {
       validationSchema={Yup.object().shape({
         name: Yup.string()
           .required('Name is required'),
-        lastName: Yup.string()
-          .required('Last Name is required'),
+        phonenumber: Yup.number()
+          .min(10, 'Phone Number must be at least 10 characters')
+          .required('Phone Number is required'),
         email: Yup.string()
           .email('Email is invalid')
           .required('Email is required'),
@@ -72,7 +73,7 @@ function RegisterPage(props) {
             email: values.email,
             password: values.password,
             name: values.name,
-            lastname: values.lastname,
+            phonenumber: values.phonenumber,
             image: `http://gravatar.com/avatar/${moment().unix()}?d=identicon`
           };
 
@@ -129,20 +130,20 @@ function RegisterPage(props) {
                 )}
               </Form.Item>
 
-              <Form.Item required label="Last Name">
+              <Form.Item required label="Phone number">
                 <Input
-                  id="lastName"
-                  placeholder="Enter your Last Name"
-                  type="text"
-                  value={values.lastName}
+                  id="phonenumber"
+                  placeholder="Enter your phone number without '-' and first 0 number"
+                  type="number"
+                  value={values.phonenumber}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className={
-                    errors.lastName && touched.lastName ? 'text-input error' : 'text-input'
+                    errors.phonenumber && touched.phonenumber ? 'text-input error' : 'text-input'
                   }
                 />
-                {errors.lastName && touched.lastName && (
-                  <div className="input-feedback">{errors.lastName}</div>
+                {errors.phonenumber && touched.phonenumber && (
+                  <div className="input-feedback">{errors.phonenumber}</div>
                 )}
               </Form.Item>
 

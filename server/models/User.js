@@ -10,17 +10,17 @@ const userSchema = mongoose.Schema({
         maxlength:50
     },
     email: {
-        type:String,
-        trim:true,
+        type: String,
+        trim: true,
         unique: 1
     },
     password: {
         type: String,
         minglength: 5
     },
-    lastname: {
-        type:String,
-        maxlength: 50
+    phonenumber: {
+        type: Number,
+        maxlength: 10
     },
     role : {
         type:Number,
