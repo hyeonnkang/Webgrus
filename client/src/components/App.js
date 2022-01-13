@@ -6,7 +6,6 @@ import LandingPage from "./views/LandingPage/LandingPage.js";
 import LoginPage from "./views/LoginPage/LoginPage.js";
 import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import NavBar from "./views/NavBar/NavBar";
-import Footers from "./views/Footer/Footer"
 import LectureUploadPage from "./views/LectureUploadPage/LectureUploadPage.js";
 import LecturePage from "./views/LecturePage/LecturePage.js";
 import LectureDetailPage from "./views/LectureDetailPage/LectureDetailPage.js";
@@ -31,7 +30,6 @@ function App() {
             <Route exact path="/lectures/:lectureId" component={Auth(LectureDetailPage, true)} />
             <Route exact path="/lectures/:lectureId/edit" component={Auth(LectureEditPage, true)} />
           </Switch>
-          <Footers />
         </div>
       </Suspense>
     </div>

@@ -2,7 +2,6 @@
 
 .menu {
   padding: 0 20px;
-  border-bottom: solid 1px #e8e8e8;
   overflow: auto;
   box-shadow: 0 0 30px #f3f1f1;
   background-color: white;
@@ -44,17 +43,15 @@
   padding: 0px 15px;
 }
 
-.menu__container .ant-menu-vertical {
-  border-bottom: none;
-}
-
 .menu__container .menu_left {
   float: left;
 }
 
 .menu__container .menu_rigth {
   float: left;
-  margin-bottom: 20px;
+  position: fixed;
+  bottom: 25px;
+  left: 20px;
 }
 
 .menu__mobile-button {

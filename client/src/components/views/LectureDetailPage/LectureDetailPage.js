@@ -44,7 +44,7 @@ function LectureDetailPage(props) {
       var buttons = (<></>)
       if (LectureDetail.teacher._id === user.userData._id) {
         buttons = (
-          <div tyle={{ width: '100%', display: 'flex', flexDirection: 'column'  }}>
+          <div tyle={{ width: '90%', display: 'flex', flexDirection: 'column'  }}>
           <Divider />
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr'}}>
             <div>
@@ -68,7 +68,7 @@ function LectureDetailPage(props) {
         )
       } else if (user.userData.isAdmin == true) {
         buttons = (
-          <div style={{ width: '100%', display: 'flex', flexDirection: 'column'  }}>
+          <div style={{ width: '90%', display: 'flex', flexDirection: 'column'  }}>
           <Divider />
           <div>
             <Popconfirm title="Are you sure？ This operation is irreversible. \nIt is recommended to contact the lecturer before deleting it."
