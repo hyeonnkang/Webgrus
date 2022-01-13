@@ -90,6 +90,4 @@ router.post('/updateApplicationStatus', (req, res) => {
   }
 })
 
-
-
 module.exports = router;
