@@ -149,7 +149,7 @@ function LectureContentsTab(props) {
               <Modal title="Edit lecture content" visible={IsEditVisible} onOk={(event) => onEdit(event, contents._id)} onCancel={editCancle}
               okText="Post" cancelText="Cancle">
                 <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={onEdit}>
-                  <Form.Item required label="Title" hasFeedback>
+                  <Form.Item label="Title">
                     <Input
                       id="title"
                       placeholder="Enter title of this lecture"
@@ -159,7 +159,7 @@ function LectureContentsTab(props) {
                       style={{ wdith: '90%', borderRadius: '4px' }}
                     />
                   </Form.Item>
-                  <Form.Item required label="Contents" hasFeedback>
+                  <Form.Item label="Contents">
                     <TextArea
                       id="contents"
                       placeholder="Enter contents of this lecture"
