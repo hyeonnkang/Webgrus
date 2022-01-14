@@ -3,7 +3,8 @@ import { FaCode } from "react-icons/fa";
 import { useSelector } from 'react-redux';
 import { Row, Col, List, Avatar, Typography, Divider, Button, Skeleton, Popconfirm, message, Icon } from 'antd';
 import axios from 'axios';
-import LectureApplicationTab from './LectureApplicationTab.js'
+import LectureApplicationTab from './Sections/LectureApplicationTab.js'
+import LectureContentsTab from './Sections/LectureContentsTab.js'
 import { withRouter } from 'react-router-dom'
 
 const { Title } = Typography;
@@ -98,19 +99,18 @@ function LectureDetailPage(props) {
                 title={LectureDetail.teacher.name} description="" />
               </List.Item>
               <Divider />
-              <br />
               <Divider><h2>Description</h2></Divider>
               <br />
               <h3>{LectureDetail.description}</h3>
               <br />
               <Divider />
-              <br />
               <Divider><h2>Lecturer Conatact Infomation</h2></Divider>
               <br />
               <h3>{LectureDetail.contactInfo}</h3>
               <br />
               <Divider />
               <LectureApplicationTab ThisLecture={LectureDetail} />
+              <LectureContentsTab ThisLecture={LectureDetail} />
               {buttons}
             </div>
           </Col>

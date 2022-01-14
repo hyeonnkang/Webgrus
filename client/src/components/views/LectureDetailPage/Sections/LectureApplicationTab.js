@@ -3,9 +3,8 @@ import { Button, Skeleton, Divider, Tooltip, message, Col, Card, Avatar, Row } f
 import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import { useDispatch } from "react-redux";
-import { editLecture } from "../../../_actions/lecture_actions";
 
-function LectureApplicationButton(props) {
+function LectureApplicationTab(props) {
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
   const [LectureApplicants, setLectureApplicants] = useState(0)
   const [AppliedLecture, setAppliedLecture] = useState(false)
@@ -63,7 +62,7 @@ function LectureApplicationButton(props) {
   }, [LectureApplicants, AppliedLecture])
 
   const onApply = () => {
-    let applyVariable ={
+    let applyVariable = {
       LectureId: ThisLecture._id,
       ApplicantInfo: localStorage.getItem('userId')
     }
@@ -101,10 +100,12 @@ function LectureApplicationButton(props) {
         <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
         <Divider><h2>Application</h2></Divider>
         <br />
+        <h3> 강의 신청자가 여기에 표시됩니다 </h3>
+        <p />
         <Row gutter={[8, 8]}>
           {LectureApplicantsInfo.map((applicants, index) => {
             return <Col xs={24} key={index}>
-              <div style={{ display: 'grid', gridTemplateColumns: '0.25fr 1fr 2fr' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '0.5fr 1fr 2fr' }}>
                 <div />
                 <Meta avatar={<Avatar src={applicants.ApplicantInfo.image} />}
                 title={applicants.ApplicantInfo.name} description="" />
@@ -155,4 +156,4 @@ function LectureApplicationButton(props) {
   }
 }
 
-export default withRouter(LectureApplicationButton);
+export default withRouter(LectureApplicationTab);

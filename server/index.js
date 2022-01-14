@@ -36,6 +36,7 @@ app.use(cookieParser());
 app.use('/api/users', require('./routes/users'));
 app.use('/api/lectures', require('./routes/lectures'));
 app.use('/api/lectureApplication', require('./routes/lectureApplication'));
+app.use('/api/lectureContents', require('./routes/lectureContents'));
 app.use('/data', express.static('data')); // 정적인 파일들을 업로드 하기위해 필요함
 
 
