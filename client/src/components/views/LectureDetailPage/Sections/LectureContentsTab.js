@@ -186,7 +186,7 @@ function LectureContentsTab(props) {
         <Modal title="Post lecture content" visible={IsPostVisible} onOk={onPost} onCancel={postCancle}
         okText="Post" cancelText="Cancle">
           <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={onPost}>
-            <Form.Item required label="Title">
+            <Form.Item label="Title">
               <Input
                 id="title"
                 placeholder="Enter title of this lecture"
@@ -196,7 +196,7 @@ function LectureContentsTab(props) {
                 style={{ wdith: '90%', borderRadius: '4px' }}
               />
             </Form.Item>
-            <Form.Item required label="Contents">
+            <Form.Item label="Contents">
               <TextArea
                 id="contents"
                 placeholder="Enter contents of this lecture"
