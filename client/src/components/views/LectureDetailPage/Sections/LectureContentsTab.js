@@ -10,6 +10,7 @@ const { Panel } = Collapse;
 const { Title } = Typography;
 const { Meta } = Card;
 const { TextArea } = Input;
+
 function LectureContentsTab(props) {
   const user = useSelector(state => state.user)
 

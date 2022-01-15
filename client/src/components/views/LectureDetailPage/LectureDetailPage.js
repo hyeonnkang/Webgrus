@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { Row, Col, List, Avatar, Typography, Divider, Button, Skeleton, Popconfirm, message, Icon } from 'antd';
 import axios from 'axios';
 import LectureApplicationTab from './Sections/LectureApplicationTab.js'
-import LectureContentsTab from './Sections/LectureContentsTab.js'
 import { withRouter } from 'react-router-dom'
 
 const { Title } = Typography;
@@ -110,7 +109,6 @@ function LectureDetailPage(props) {
               <br />
               <Divider />
               <LectureApplicationTab ThisLecture={LectureDetail} />
-              <LectureContentsTab ThisLecture={LectureDetail} />
               {buttons}
             </div>
           </Col>

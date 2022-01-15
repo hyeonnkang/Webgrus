@@ -4,6 +4,8 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import { useDispatch } from "react-redux";
 
+import LectureContentsTab from './LectureContentsTab.js'
+
 function LectureApplicationTab(props) {
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
   const [LectureApplicants, setLectureApplicants] = useState(0)
@@ -117,6 +119,7 @@ function LectureApplicationTab(props) {
         </Row>
         <br />
         <Divider />
+        <LectureContentsTab ThisLecture={ThisLecture} />
         </div>
       )
     } else if (ThisLecture.applicationPeriod === true) {
@@ -131,7 +134,8 @@ function LectureApplicationTab(props) {
            : <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청하기</h3>}
         </Button>
         <Divider />
-        <br />
+        {AppliedLecture &&
+        <LectureContentsTab ThisLecture={ThisLecture} />}
         </div>
       )
     } else if (ThisLecture.applicationPeriod === false) {
@@ -147,7 +151,8 @@ function LectureApplicationTab(props) {
           : <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청 불가</h3>}
         </Button>
         <Divider />
-        <br />
+        {AppliedLecture &&
+        <LectureContentsTab ThisLecture={ThisLecture} />}
         </div>
       )
     }
