@@ -30,7 +30,7 @@ router.post('/delete', (req, res) => {
 })
 
 router.post('/edit', (req, res) => {
-  LectureContents.update({ "_id": req.body.postId }, { title: req.body.title, content: req.body.content}).populate('writer').exec((err) => {
+  LectureContents.updateOne({ _id: req.body.postId }, { $set: { title: req.body.title, content: req.body.content}}).exec((err) => {
     if (err) return res.status(400).json({ success: false, err })
     return res.status(200).json({ success: true })
   })

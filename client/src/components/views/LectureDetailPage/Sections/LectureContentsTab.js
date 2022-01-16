@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Skeleton, Divider, Tooltip, message, Col, Card, Avatar, Row, Input,
   Form, Typography, Collapse, Icon, Modal, Popconfirm } from 'antd';
 import axios from 'axios';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { withRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
@@ -13,6 +15,7 @@ const { TextArea } = Input;
 
 function LectureContentsTab(props) {
   const user = useSelector(state => state.user)
+  const [formErrorMessage, setFormErrorMessage] = useState('')
 
   const [Title, setTitle] = useState("")
   const [Contents, setContents] = useState("")
@@ -34,32 +37,6 @@ function LectureContentsTab(props) {
     })
   }, [])
 
-  const onTitleChange = (event) => {
-    setTitle(event.currentTarget.value)
-  }
-  const onContentsChange = (event) => {
-    setContents(event.currentTarget.value)
-  }
-  const onPost = (event) => {
-    event.preventDefault()
-
-    let variable = {
-      writer: user.userData._id,
-      lectureId: props.ThisLecture._id,
-      title: Title,
-      content: Contents
-    }
-
-    axios.post('/api/lectureContents/post', variable).then(response => {
-      if (response.data.success) {
-        message.success('Cotents post success!')
-        window.location.reload()
-      } else {
-        message.error('Cotents Post Error! Please contact the site manager')
-        window.location.reload()
-      }
-    })
-  }
   const onDelete = (event, postId) => {
     event.preventDefault()
 
@@ -73,25 +50,6 @@ function LectureContentsTab(props) {
         window.location.reload()
       } else {
         message.error('Cotents deletion Error! Please contact the site manager')
-        window.location.reload()
-      }
-    })
-  }
-  const onEdit = (event, postId) => {
-    event.preventDefault()
-
-    let variable = {
-      postId: postId,
-      title: Title,
-      content: Contents
-    }
-
-    axios.post('/api/lectureContents/edit', variable).then(response => {
-      if (response.data.success) {
-        message.success('Cotents edit success!')
-        window.location.reload()
-      } else {
-        message.error('Cotents edit Error! Please contact the site manager')
         window.location.reload()
       }
     })
@@ -113,7 +71,7 @@ function LectureContentsTab(props) {
   }
 
   var contentsList = (<div></div>)
-  var postLectureCotents = (<div></div>)
+  var postLectureCotent = (<div></div>)
 
   if (user.userData._id === props.ThisLecture.teacher._id && LectureContents) {
     contentsList = (
@@ -147,68 +105,219 @@ function LectureContentsTab(props) {
                 <Icon type="edit" style={{ display: 'flex', fontSize: 'x-large', justifyContent: 'flex-end', alignItems: 'right' }} />
               </Button>
 
-              <Modal title="Edit lecture content" visible={IsEditVisible} onOk={(event) => onEdit(event, contents._id)} onCancel={editCancle}
-              okText="Post" cancelText="Cancle">
-                <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={onEdit}>
-                  <Form.Item label="Title">
-                    <Input
-                      id="title"
-                      placeholder="Enter title of this lecture"
-                      type="text"
-                      value={Title}
-                      onChange={onTitleChange}
-                      style={{ wdith: '90%', borderRadius: '4px' }}
-                    />
-                  </Form.Item>
-                  <Form.Item label="Contents">
-                    <TextArea
-                      id="contents"
-                      placeholder="Enter contents of this lecture"
-                      type="text"
-                      value={Contents}
-                      onChange={onContentsChange}
-                      style={{ wdith: '90%', borderRadius: '4px' }}
-                    />
-                  </Form.Item>
-                </Form>
-              </Modal>
+              <Formik
+                initialValues={{
+                  postId: contents._id,
+                  title: contents.title,
+                  content: contents.content
+                }}
+                validationSchema={Yup.object().shape({
+                  postId: Yup.string(),
+                  title: Yup.string()
+                    .required('Title is required'),
+                  content: Yup.string()
+                    .required('Content is required')
+                })}
+                onSubmit={(values, { setSubmitting }) => {
+                  setTimeout(() => {
+                    let dataToSubmit = {
+                      postId: contents._id,
+                      title: values.title,
+                      content: values.content
+                    }
+
+                    axios.post('/api/lectureContents/edit', dataToSubmit).then(response => {
+                      if (response.data.success) {
+                        message.success('Cotents edit success!')
+                        window.location.reload()
+                      } else {
+                        setFormErrorMessage('Cotents Edit Error! Check out your input')
+                      }
+                    })
+                    .catch(err => {
+                      setFormErrorMessage('Cotents Edit Error! Check out your input')
+                      setTimeout(() => {
+                        setFormErrorMessage("")
+                      }, 3000);
+                    });
+
+                    setSubmitting(false);
+                  }, 500);
+                }}
+              >
+                {props => {
+                  const {
+                    values,
+                    touched,
+                    errors,
+                    dirty,
+                    isSubmitting,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    handleReset,
+                  } = props;
+                  return (
+                    <Modal title="Edit lecture content" visible={IsEditVisible} onOk={handleSubmit} onCancel={editCancle}
+                    okText="Edit" cancelText="Cancle">
+                      <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={handleSubmit}>
+                        <Form.Item label="Title" hasFeedback validateStatus={errors.title && touched.title ? "error" : 'success'}>
+                          <Input
+                            id="title"
+                            placeholder="Enter title of this"
+                            type="text"
+                            value={values.title}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={
+                              errors.title && touched.title ? 'text-input error' : 'text-input'
+                            }
+                            style={{ wdith: '90%', borderRadius: '4px' }}
+                          />
+                          {errors.title && touched.title && (
+                            <div className="input-feedback">{errors.title}</div>
+                          )}
+                        </Form.Item>
+                        <Form.Item label="Content" hasFeedback validateStatus={errors.content && touched.content ? "error" : 'success'}>
+                          <TextArea
+                            id="content"
+                            placeholder="Enter content of this"
+                            type="text"
+                            value={values.content}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className={
+                              errors.content && touched.content ? 'text-input error' : 'text-input'
+                            }
+                            style={{ wdith: '90%', borderRadius: '4px' }}
+                          />
+                          {errors.content && touched.content && (
+                            <div className="input-feedback">{errors.content}</div>
+                          )}
+                        </Form.Item>
+
+                        {formErrorMessage && (
+                          <label ><p style={{ color: '#ff0000bf', fontSize: '0.7rem', border: '1px solid', padding: '1rem', borderRadius: '10px' }}>{formErrorMessage}</p></label>
+                        )}
+                      </Form>
+                    </Modal>
+                  );
+                }}
+              </Formik>
             </div>
           </Panel>
         })}
       </Collapse>
       </div>
     )
-    postLectureCotents = (
+    postLectureCotent = (
       <div>
         <Button type="link" onClick={showPost} style={{ width: '20vh' }}>
           <Icon type="plus-square" style={{ display: 'flex', fontSize: 'x-large', justifyContent: 'center', alignItems: 'center' }} />
         </Button>
 
-        <Modal title="Post lecture content" visible={IsPostVisible} onOk={onPost} onCancel={postCancle}
-        okText="Post" cancelText="Cancle">
-          <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={onPost}>
-            <Form.Item label="Title">
-              <Input
-                id="title"
-                placeholder="Enter title of this lecture"
-                type="text"
-                value={Title}
-                onChange={onTitleChange}
-                style={{ wdith: '90%', borderRadius: '4px' }}
-              />
-            </Form.Item>
-            <Form.Item label="Contents">
-              <TextArea
-                id="contents"
-                placeholder="Enter contents of this lecture"
-                type="text"
-                value={Contents}
-                onChange={onContentsChange}
-                style={{ wdith: '90%', borderRadius: '4px' }}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
+        <Formik
+          initialValues={{
+            writer: user.userData._id,
+            lectureId: props.ThisLecture._id,
+            title: '',
+            content: ''
+          }}
+          validationSchema={Yup.object().shape({
+            writer: Yup.string(),
+            lectureId: Yup.string(),
+            title: Yup.string()
+              .required('Title is required'),
+            content: Yup.string()
+              .required('Content is required')
+          })}
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              let dataToSubmit = {
+                writer: user.userData._id,
+                lectureId: props.ThisLecture._id,
+                title: values.title,
+                content: values.content
+              }
+
+              axios.post('/api/lectureContents/post', dataToSubmit).then(response => {
+                if (response.data.success) {
+                  message.success('Cotents post success!')
+                  window.location.reload()
+                } else {
+                  setFormErrorMessage('Cotents Post Error! Check out your input')
+                }
+              })
+              .catch(err => {
+                setFormErrorMessage('Cotents Post Error! Check out your input')
+                setTimeout(() => {
+                  setFormErrorMessage("")
+                }, 3000);
+              });
+
+              setSubmitting(false);
+            }, 500);
+          }}
+        >
+          {props => {
+            const {
+              values,
+              touched,
+              errors,
+              dirty,
+              isSubmitting,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              handleReset,
+            } = props;
+            return (
+              <Modal title="Post lecture content" visible={IsPostVisible} onOk={handleSubmit} onCancel={postCancle}
+              okText="Post" cancelText="Cancle">
+              <Form style={{ display: 'grid', gridTemplateRows: '1fr 1fr', width: '90%' }} onSubmit={handleSubmit}>
+                <Form.Item label="Title" hasFeedback validateStatus={errors.title && touched.title ? "error" : 'success'}>
+                  <Input
+                    id="title"
+                    placeholder="Enter title of this"
+                    type="text"
+                    value={values.title}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={
+                      errors.title && touched.title ? 'text-input error' : 'text-input'
+                    }
+                    style={{ wdith: '90%', borderRadius: '4px' }}
+                  />
+                  {errors.title && touched.title && (
+                    <div className="input-feedback">{errors.title}</div>
+                  )}
+                </Form.Item>
+                <Form.Item label="Content" hasFeedback validateStatus={errors.content && touched.content ? "error" : 'success'}>
+                  <TextArea
+                    id="content"
+                    placeholder="Enter content of this"
+                    type="text"
+                    value={values.content}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className={
+                      errors.content && touched.content ? 'text-input error' : 'text-input'
+                    }
+                    style={{ wdith: '90%', borderRadius: '4px' }}
+                  />
+                  {errors.content && touched.content && (
+                    <div className="input-feedback">{errors.content}</div>
+                  )}
+                </Form.Item>
+
+                {formErrorMessage && (
+                  <label ><p style={{ color: '#ff0000bf', fontSize: '0.7rem', border: '1px solid', padding: '1rem', borderRadius: '10px' }}>{formErrorMessage}</p></label>
+                )}
+              </Form>
+              </Modal>
+            );
+          }}
+        </Formik>
       </div>
     )
   } else if (LectureContents) {
@@ -238,7 +347,7 @@ function LectureContentsTab(props) {
       <Divider><h2>Lecture Contents</h2></Divider>
       {contentsList}
       <br />
-      {postLectureCotents}
+      {postLectureCotent}
       <Divider />
     </div>
   )

@@ -240,6 +240,10 @@ function LectureEditPage(props) {
                         <div className="input-feedback">{errors.capacity}</div>
                       )}
                     </Form.Item>
+                    
+                    {formErrorMessage && (
+                      <label ><p style={{ color: '#ff0000bf', fontSize: '0.7rem', border: '1px solid', padding: '1rem', borderRadius: '10px' }}>{formErrorMessage}</p></label>
+                    )}
                     <br />
                     <Form.Item {...tailFormItemLayout}>
                       <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
