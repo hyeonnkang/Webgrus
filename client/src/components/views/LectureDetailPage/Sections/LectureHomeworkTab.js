@@ -7,47 +7,47 @@ import * as Yup from 'yup';
 import { withRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
-import LectureContentsList from './LectureContentsList.js'
-import LectureContentsPost from './LectureContentsPost.js'
+import LectureHomeworkList from './LectureHomeworkList.js'
+import LectureHomeworkPost from './LectureHomeworkPost.js'
 
 const { Panel } = Collapse;
 const { Title } = Typography;
 const { Meta } = Card;
 const { TextArea } = Input;
 
-function LectureContentsTab(props) {
+function LectureHomeworkTab(props) {
   const user = useSelector(state => state.user)
 
-  const [LectureContents, setLectureContents] = useState([])
+  const [LectureHomework, setLectureHomework] = useState([])
 
   useEffect(() => {
     const variable = {
       lectureId: props.ThisLecture._id
     }
 
-    axios.post('/api/lectureContents/get', variable).then(response => {
+    axios.post('/api/lectureHomework/get', variable).then(response => {
       if (response.data.success) {
-        setLectureContents(response.data.lectureContents)
+        setLectureHomework(response.data.lectureHomework)
         console.log(response.data);
       } else {
-        message.error('Lecture List Error! Please contact the site manager')
+        message.error('Homework List Error! Please contact the site manager')
         window.location.reload();
       }
     })
   }, [])
 
-  var contentsList = (<div></div>)
-  var postLectureContent = (<div></div>)
+  var homeworkList = (<div></div>)
+  var postLectureHomework = (<div></div>)
 
-  if (user.userData._id === props.ThisLecture.teacher._id && LectureContents) {
-    contentsList = (
-      <LectureContentsList LectureContents={LectureContents} />
+  if (user.userData._id === props.ThisLecture.teacher._id && LectureHomework) {
+    homeworkList = (
+      <LectureHomeworkList LectureHomework={LectureHomework} />
     )
-    postLectureContent = (
-      <LectureContentsPost ThisLecture={props.ThisLecture} user={user} />
+    postLectureHomework = (
+      <LectureHomeworkPost ThisLecture={props.ThisLecture} user={user} />
     )
-  } else if (LectureContents) {
-    contentsList = (
+  } else if (LectureHomework) {
+    homeworkList = (
       <div style={{ width: '100%' }}>
       <Collapse
         bordered={true}
@@ -56,11 +56,11 @@ function LectureContentsTab(props) {
         className="site-collapse-custom-collapse"
         accordion
       >
-        {LectureContents.map((contents, index) => {
-          return <Panel header={contents.title} key={index} style={{ fontSize: 'large' }} className="site-collapse-custom-panel">
-            <p style={{ fontSize: 'large' }}>{contents.content}</p>
+        {LectureHomework.map((homework, index) => {
+          return <Panel header={homework.title} key={index} style={{ fontSize: 'large' }} className="site-collapse-custom-panel">
+            <p style={{ fontSize: 'large' }}>{homework.content}</p>
             <br />
-            <Meta avatar={<Avatar src={contents.writer.image} />} title={contents.writer.name} description="" />
+            <Meta avatar={<Avatar src={homework.writer.image} />} title={homework.writer.name} description="" />
           </Panel>
         })}
       </Collapse>
@@ -70,13 +70,13 @@ function LectureContentsTab(props) {
 
   return(
     <div style={{ width: '100%', justifyContent: 'center', alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-      <Divider><h2>Lecture Contents</h2></Divider>
-      {contentsList}
+      <Divider><h2>Homeworks</h2></Divider>
+      {homeworkList}
       <br />
-      {postLectureContent}
+      {postLectureHomework}
       <Divider />
     </div>
   )
 }
 
-export default withRouter(LectureContentsTab);
+export default withRouter(LectureHomeworkTab);

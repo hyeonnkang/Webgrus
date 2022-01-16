@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom'
 import { useDispatch } from "react-redux";
 
 import LectureContentsTab from './LectureContentsTab.js'
+import LectureHomeworkTab from './LectureHomeworkTab.js'
 
 function LectureApplicationTab(props) {
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
@@ -120,6 +121,7 @@ function LectureApplicationTab(props) {
         <br />
         <Divider />
         <LectureContentsTab ThisLecture={ThisLecture} />
+        <LectureHomeworkTab ThisLecture={ThisLecture} />
         </div>
       )
     } else if (ThisLecture.applicationPeriod === true) {
@@ -136,6 +138,8 @@ function LectureApplicationTab(props) {
         <Divider />
         {AppliedLecture &&
         <LectureContentsTab ThisLecture={ThisLecture} />}
+        {AppliedLecture &&
+        <LectureHomeworkTab ThisLecture={ThisLecture} />}
         </div>
       )
     } else if (ThisLecture.applicationPeriod === false) {
@@ -153,6 +157,8 @@ function LectureApplicationTab(props) {
         <Divider />
         {AppliedLecture &&
         <LectureContentsTab ThisLecture={ThisLecture} />}
+        {AppliedLecture &&
+        <LectureHomeworkTab ThisLecture={ThisLecture} />}
         </div>
       )
     }
