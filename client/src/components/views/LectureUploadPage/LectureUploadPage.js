@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { registerLecture } from "../../../_actions/lecture_actions";
 import { Formik } from 'formik';
@@ -8,6 +7,28 @@ import { Form, Input, Button, Typography, message, InputNumber, Icon } from 'ant
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -26,6 +47,7 @@ const tailFormItemLayout = {
 };
 
 function LectureUploadPage(props) {
+  let navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.user) // redux state에서 유저정보 가져옴
@@ -95,7 +117,7 @@ function LectureUploadPage(props) {
               if (response.payload.success) {
                 message.success('Lecture has been registered successfully')
                 setTimeout(() => {
-                  props.history.push('/')
+                  navigate('/')
                 }, 2000)
               } else {
                 setFormErrorMessage('Lecture Register Error! Check out your input')

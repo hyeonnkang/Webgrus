@@ -1,13 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Skeleton, Divider, Tooltip, message, Col, Card, Avatar, Row } from 'antd';
 import axios from 'axios';
-import { withRouter } from 'react-router-dom'
 import { useDispatch } from "react-redux";
+
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 
 import LectureContentsTab from './LectureContentsTab.js'
 import LectureHomeworkTab from './LectureHomeworkTab.js'
 
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
+
 function LectureApplicationTab(props) {
+  let navigate = useNavigate();
+
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
   const [LectureApplicants, setLectureApplicants] = useState(0)
   const [AppliedLecture, setAppliedLecture] = useState(false)
@@ -39,6 +62,7 @@ function LectureApplicationTab(props) {
     LectureId: ThisLecture._id,
     ApplicantInfo: localStorage.getItem('userId')
   }
+
   useEffect(() => {
     axios.post('/api/lectureApplication/getLectureApplicants', applicantsVariable).then(response => {
       if (response.data.success) {
@@ -48,7 +72,7 @@ function LectureApplicationTab(props) {
         console.log(response.data.ApplicantsInfo)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
-        props.history.push('/lectures')
+        navigate('/lectures')
       }
     })
 
@@ -57,7 +81,7 @@ function LectureApplicationTab(props) {
         setAppliedLecture(response.data.isApplied)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
-        props.history.push('/lectures')
+        navigate('/lectures')
       }
     })
 
@@ -132,8 +156,9 @@ function LectureApplicationTab(props) {
         <p />
         <Button style={{ height: 'auto', minWidth: '275px'}} onClick={onApply}>
           <h3 style={{ color: 'deepskyblue', fontWeight: 550, marginTop: '5px'  }}>모집 중</h3>
-          {AppliedLecture ? <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청 완료</h3>
-           : <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청하기</h3>}
+          {AppliedLecture
+          ? <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청 완료</h3>
+          : <h3 style={{ marginBottom: '5px', fontWeight: 550  }}>신청하기</h3>}
         </Button>
         <Divider />
         {AppliedLecture &&

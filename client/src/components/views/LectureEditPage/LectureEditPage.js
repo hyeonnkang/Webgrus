@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { withRouter } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { editLecture } from "../../../_actions/lecture_actions";
 import { Formik } from 'formik';
@@ -8,6 +7,28 @@ import { Form, Input, Button, Typography, message, InputNumber, Icon, Skeleton, 
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
+
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 const { TextArea } = Input;
 const { Title } = Typography;
@@ -26,6 +47,7 @@ const tailFormItemLayout = {
 };
 
 function LectureEditPage(props) {
+  let navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.user) // redux state에서 유저정보 가져옴
@@ -33,7 +55,7 @@ function LectureEditPage(props) {
   const [LectureDetail, setLectureDetail] = useState([])
   const [LectureFilePath, setLectureFilePath] = useState("")
 
-  const lectureId = props.match.params.lectureId
+  const { lectureId } = useParams();
   const variable = {
     lectureId: lectureId
   }
@@ -45,7 +67,7 @@ function LectureEditPage(props) {
         setLectureFilePath(response.data.lectureDetail.filePath)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
-        props.history.push('/')
+        navigate('/')
       }
     })
   }, [])
@@ -116,7 +138,7 @@ function LectureEditPage(props) {
                   if (response.payload.success) {
                     message.success('Lecture has been edited successfully')
                     setTimeout(() => {
-                      props.history.push('/')
+                      navigate('/')
                     }, 2000)
                   } else {
                     setFormErrorMessage('Lecture Edit Error! Check out your input')
@@ -240,7 +262,7 @@ function LectureEditPage(props) {
                         <div className="input-feedback">{errors.capacity}</div>
                       )}
                     </Form.Item>
-                    
+
                     {formErrorMessage && (
                       <label ><p style={{ color: '#ff0000bf', fontSize: '0.7rem', border: '1px solid', padding: '1rem', borderRadius: '10px' }}>{formErrorMessage}</p></label>
                     )}

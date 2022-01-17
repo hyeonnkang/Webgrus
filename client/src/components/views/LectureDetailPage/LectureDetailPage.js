@@ -4,15 +4,37 @@ import { useSelector } from 'react-redux';
 import { Row, Col, List, Avatar, Typography, Divider, Button, Skeleton, Popconfirm, message, Icon } from 'antd';
 import axios from 'axios';
 import LectureApplicationTab from './Sections/LectureApplicationTab.js'
-import { withRouter } from 'react-router-dom'
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 const { Title } = Typography;
 
 function LectureDetailPage(props) {
+    let navigate = useNavigate();
+
     const [LectureDetail, setLectureDetail] = useState([])
 
     const user = useSelector(state => state.user)
-    const lectureId = props.match.params.lectureId
+    const { lectureId } = useParams();
     const variable = {
       lectureId: lectureId
     }
@@ -23,7 +45,7 @@ function LectureDetailPage(props) {
           setLectureDetail(response.data.lectureDetail)
         } else {
           message.error('Lecture Infomation Error! Please contact the site manager')
-          props.history.push('/lectures')
+          navigate('/lectures')
         }
       })
     }, [])
@@ -32,10 +54,10 @@ function LectureDetailPage(props) {
       axios.post('/api/lectures/deleteLecture', variable).then(response => {
         if (response.data.success) {
           message.warning('Lecture deleted')
-          props.history.push('/lectures')
+          navigate('/lectures')
         } else {
           message.error('Lecture Deletion Error! Please contact the site manager')
-          props.history.push('/lectures')
+          navigate('/lectures')
         }
       })
     }

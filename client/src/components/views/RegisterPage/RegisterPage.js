@@ -10,6 +10,9 @@ import {
   Input,
   Button,
 } from 'antd';
+import {
+  useNavigate
+} from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -37,6 +40,7 @@ const tailFormItemLayout = {
 };
 
 function RegisterPage(props) {
+  let navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [formErrorMessage, setFormErrorMessage] = useState('')
@@ -68,7 +72,6 @@ function RegisterPage(props) {
       })}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
-
           let dataToSubmit = {
             email: values.email,
             password: values.password,
@@ -80,7 +83,7 @@ function RegisterPage(props) {
           dispatch(registerUser(dataToSubmit)).then(response => {
             if (response.payload.success) {
               message.success('Registration Success! Please wait for the admin\'s approval.')
-              props.history.push("/login");
+              navigate("/login");
             } else {
               setFormErrorMessage('Registration Error! Check out your input')
             }

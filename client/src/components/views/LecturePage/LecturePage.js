@@ -1,13 +1,35 @@
 import React, { useState, useEffect } from 'react'
 import { FaCode } from "react-icons/fa";
-import { withRouter } from "react-router-dom";
 import { Card, Avatar, Col, Typography, Row, Button, Divider, message } from 'antd';
 import axios from 'axios';
+
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 const { Title } = Typography;
 const { Meta } = Card;
 
 function LecturePage(props) {
+    let navigate = useNavigate();
     const [Lecture, setLecture] = useState([])
 
     useEffect(() => {
@@ -16,7 +38,7 @@ function LecturePage(props) {
           setLecture(response.data.lectures)
         } else {
           message.error('Lecture Infomation Error! Please contact the site manager')
-          props.history.push('/')
+          navigate('/')
         }
       })
     }, [])

@@ -4,9 +4,30 @@ import { Button, Skeleton, Divider, Tooltip, message, Col, Card, Avatar, Row, In
 import axios from 'axios';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { withRouter } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
+
+import {
+  useLocation,
+  useNavigate,
+  useParams
+} from "react-router-dom";
+
+function withRouter(Component) {
+  function ComponentWithRouterProp(props) {
+    let location = useLocation();
+    let navigate = useNavigate();
+    let params = useParams();
+    return (
+      <Component
+        {...props}
+        router={{ location, navigate, params }}
+      />
+    );
+  }
+
+  return ComponentWithRouterProp;
+}
 
 const { Panel } = Collapse;
 const { Title } = Typography;

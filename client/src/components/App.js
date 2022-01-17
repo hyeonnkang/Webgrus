@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Auth from "../hoc/auth";
 // pages for this product
 import LandingPage from "./views/LandingPage/LandingPage.js";
@@ -21,15 +21,15 @@ function App() {
       <Suspense fallback={(<div>Loading...</div>)} id="grid_Main1">
         <NavBar />
         <div>
-          <Switch>
-            <Route exact path="/" component={Auth(LandingPage, null)} />
-            <Route exact path="/login" component={Auth(LoginPage, false)} />
-            <Route exact path="/register" component={Auth(RegisterPage, false)} />
-            <Route exact path="/lectures" component={Auth(LecturePage, true)} />
-            <Route exact path="/lectures/register" component={Auth(LectureUploadPage, true)} />
-            <Route exact path="/lectures/:lectureId" component={Auth(LectureDetailPage, true)} />
-            <Route exact path="/lectures/:lectureId/edit" component={Auth(LectureEditPage, true)} />
-          </Switch>
+          <Routes>
+            <Route path="/" element={Auth(LandingPage, null)} />
+            <Route path="/login" element={Auth(LoginPage, false)} />
+            <Route path="/register" element={Auth(RegisterPage, false)} />
+            <Route path="/lectures" element={Auth(LecturePage, true)} />
+            <Route path="/lectures/register" element={Auth(LectureUploadPage, true)} />
+            <Route path="/lectures/:lectureId" element={Auth(LectureDetailPage, true)} />
+            <Route path="/lectures/:lectureId/edit" element={Auth(LectureEditPage, true)} />
+          </Routes>
         </div>
       </Suspense>
     </div>
