@@ -33,27 +33,10 @@ function LectureApplicationTab(props) {
 
   const [ThisLecture, setThisLecture] = useState(props.ThisLecture)
   const [LectureApplicants, setLectureApplicants] = useState(0)
-  const [AppliedLecture, setAppliedLecture] = useState(false)
   const [LectureApplicantsInfo, setLectureApplicantsInfo] = useState([])
+  const [AppliedLecture, setAppliedLecture] = useState(false)
 
   const { Meta } = Card;
-
-  const StatusUpdate = () => {
-    let updateVariable = {
-      LectureId: ThisLecture._id,
-      Capacity: ThisLecture.capacity,
-      Applicants: LectureApplicants
-    }
-    axios.post('/api/lectures/updateApplicationStatus', updateVariable).then(response => {
-      if (response.data.success) {
-        console.log(ThisLecture)
-        console.log(response.data)
-      } else {
-        message.error('Lecture Infomation Error! Please contact the site manager')
-        window.location.reload();
-      }
-    })
-  }
 
   const applicantsVariable = {
     LectureId: ThisLecture._id
@@ -62,14 +45,23 @@ function LectureApplicationTab(props) {
     LectureId: ThisLecture._id,
     ApplicantInfo: localStorage.getItem('userId')
   }
+  let updateVariable = {
+    LectureId: ThisLecture._id,
+    Boolean: false,
+  }
+  if (LectureApplicants >= ThisLecture.capacity) {
+    updateVariable.Boolean = false
+  } else {
+    updateVariable.Boolean = true
+  }
 
   useEffect(() => {
+    console.log(LectureApplicants);
+
     axios.post('/api/lectureApplication/getLectureApplicants', applicantsVariable).then(response => {
       if (response.data.success) {
         setLectureApplicants(response.data.Apply)
         setLectureApplicantsInfo(response.data.ApplicantsInfo)
-        console.log(LectureApplicantsInfo)
-        console.log(response.data.ApplicantsInfo)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
         navigate('/lectures')
@@ -85,8 +77,28 @@ function LectureApplicationTab(props) {
       }
     })
 
-    StatusUpdate()
-  }, [LectureApplicants, AppliedLecture])
+    console.log(LectureApplicants);
+    axios.post('/api/lectures/updateApplicationStatus', updateVariable).then(response => {
+      if (response.data.success) {
+        const variable = {
+          lectureId: ThisLecture._id
+        }
+        axios.post('/api/lectures/getLectureDetail', variable).then(response => {
+          if (response.data.success) {
+            if (ThisLecture.applicationPeriod != response.data.lectureDetail.applicationPeriod) {
+              window.location.reload()
+            }
+          } else {
+            message.error('Lecture Infomation Error! Please contact the site manager')
+            navigate('/lectures')
+          }
+        })
+      } else {
+        message.error('Lecture Infomation Error! Please contact the site manager')
+        window.location.reload();
+      }
+    })
+  }, [LectureApplicants])
 
   const onApply = () => {
     let applyVariable = {
@@ -99,8 +111,6 @@ function LectureApplicationTab(props) {
         if (response.data.success) {
           setLectureApplicants(LectureApplicants - 1)
           setAppliedLecture(!AppliedLecture)
-
-          window.location.reload();
         } else {
           message.error('Application Error! Please contact the site manager')
           window.location.reload();
@@ -111,8 +121,6 @@ function LectureApplicationTab(props) {
         if (response.data.success) {
           setLectureApplicants(LectureApplicants + 1)
           setAppliedLecture(!AppliedLecture)
-
-          window.location.reload();
         } else {
           message.error('Application Error! Please contact the site manager')
           window.location.reload();

@@ -77,17 +77,10 @@ router.post('/editLecture', (req, res) => {
 })
 
 router.post('/updateApplicationStatus', (req, res) => {
-  if (req.body.Capacity === req.body.Applicants) {
-    Lecture.updateOne({ _id: req.body.LectureId }, { $set: { applicationPeriod: false }}).exec((err) => {
-      if (err) return res.status(400).json({ success: false, err })
-      return res.status(200).json({ success: true, apply: req.body.Applicants })
-    })
-  } else {
-    Lecture.updateOne({ _id: req.body.LectureId }, { $set: { applicationPeriod: true }}).exec((err) => {
-      if (err) return res.status(400).json({ success: false, err })
-      return res.status(200).json({ success: true, apply: req.body.Applicants })
-    })
-  }
+  Lecture.updateOne({ _id: req.body.LectureId }, { $set: { applicationPeriod: req.body.Boolean }}).exec((err) => {
+    if (err) return res.status(400).json({ success: false, err })
+    return res.status(200).json({ success: true })
+  })
 })
 
 module.exports = router;
