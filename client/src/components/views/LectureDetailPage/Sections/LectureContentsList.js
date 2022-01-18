@@ -43,6 +43,7 @@ function LectureContentsList(props) {
   }
   const editCancle = () => {
     setIsEditVisible(false);
+    window.location.reload()
   }
 
   const onDelete = (event, postId) => {
@@ -66,7 +67,7 @@ function LectureContentsList(props) {
   return(<div style={{ width: '100%' }}>
   <Collapse
     bordered={true}
-    defaultActiveKey={[1]}
+    defaultActiveKey={[0]}
     expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
     className="site-collapse-custom-collapse"
     accordion
@@ -77,7 +78,7 @@ function LectureContentsList(props) {
         <br />
         <div style={{ display: 'grid', gridTemplateColumns: '5fr 1fr 1fr'}}>
           <Meta avatar={<Avatar src={contents.writer.image} />} title={contents.writer.name} description="" />
-
+          
           <Popconfirm
             title="Are you sure？ deletion is irreversible."
             placement="topRight"

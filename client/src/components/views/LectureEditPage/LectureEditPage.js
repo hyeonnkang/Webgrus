@@ -67,7 +67,7 @@ function LectureEditPage(props) {
         setLectureFilePath(response.data.lectureDetail.filePath)
       } else {
         message.error('Lecture Infomation Error! Please contact the site manager')
-        navigate('/')
+        navigate('/lectures')
       }
     })
   }, [])

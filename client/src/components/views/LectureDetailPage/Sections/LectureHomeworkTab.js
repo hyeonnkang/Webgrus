@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from "react-redux";
 import LectureHomeworkList from './LectureHomeworkList.js'
 import LectureHomeworkPost from './LectureHomeworkPost.js'
+import Linkify from "react-linkify"; // URL을 링크로 만듬
 
 import {
   useLocation,
@@ -72,7 +73,7 @@ function LectureHomeworkTab(props) {
       <div style={{ width: '100%' }}>
       <Collapse
         bordered={true}
-        defaultActiveKey={[1]}
+        defaultActiveKey={[0]}
         expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
         className="site-collapse-custom-collapse"
         accordion
@@ -81,6 +82,8 @@ function LectureHomeworkTab(props) {
           return <Panel header={homework.title} key={index} style={{ fontSize: 'large' }} className="site-collapse-custom-panel">
             <p style={{ fontSize: 'large' }}>{homework.content}</p>
             <br />
+            Homework must be submitted here :
+            <p style={{ fontSize: 'large' }}><Linkify>{homework.link}</Linkify></p>
             <Meta avatar={<Avatar src={homework.writer.image} />} title={homework.writer.name} description="" />
           </Panel>
         })}

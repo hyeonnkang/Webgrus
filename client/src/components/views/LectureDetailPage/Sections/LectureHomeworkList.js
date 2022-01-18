@@ -68,7 +68,7 @@ function LectureHomeworkList(props) {
   return(<div style={{ width: '100%' }}>
   <Collapse
     bordered={true}
-    defaultActiveKey={[1]}
+    defaultActiveKey={[0]}
     expandIcon={({ isActive }) => <Icon type="caret-right" rotate={isActive ? 90 : 0} />}
     className="site-collapse-custom-collapse"
     accordion

@@ -117,7 +117,7 @@ function LectureUploadPage(props) {
               if (response.payload.success) {
                 message.success('Lecture has been registered successfully')
                 setTimeout(() => {
-                  navigate('/')
+                  navigate('/lectures')
                 }, 2000)
               } else {
                 setFormErrorMessage('Lecture Register Error! Check out your input')
