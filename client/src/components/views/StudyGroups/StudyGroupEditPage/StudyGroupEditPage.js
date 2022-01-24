@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { editLecture } from "../../../_actions/lecture_actions";
+import { editStudyGroup } from "../../../../_actions/studygroup_actions";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Input, Button, Typography, message, InputNumber, Icon, Skeleton, Checkbox } from 'antd';
@@ -46,28 +46,28 @@ const tailFormItemLayout = {
   },
 };
 
-function LectureEditPage(props) {
+function StudyGroupEditPage(props) {
   let navigate = useNavigate();
   const dispatch = useDispatch();
 
   const user = useSelector(state => state.user) // redux state에서 유저정보 가져옴
 
-  const [LectureDetail, setLectureDetail] = useState([])
-  const [LectureFilePath, setLectureFilePath] = useState("")
+  const [StudyGroupDetail, setStudyGroupDetail] = useState([])
+  const [StudyGroupFilePath, setStudyGroupFilePath] = useState("")
 
-  const { lectureId } = useParams();
+  const { studygroupId } = useParams();
   const variable = {
-    lectureId: lectureId
+    studygroupId: studygroupId
   }
 
   useEffect(() => {
-    axios.post('/api/lectures/getLectureDetail', variable).then(response => {
+    axios.post('/api/studygroups/getStudyGroupDetail', variable).then(response => {
       if (response.data.success) {
-        setLectureDetail(response.data.lectureDetail)
-        setLectureFilePath(response.data.lectureDetail.filePath)
+        setStudyGroupDetail(response.data.studygroupDetail)
+        setStudyGroupFilePath(response.data.studygroupDetail.filePath)
       } else {
-        message.error('Lecture Infomation Error! Please contact the site manager')
-        navigate('/lectures')
+        message.error('Study Group Infomation Error! Please contact the site manager')
+        navigate('/studygroups')
       }
     })
   }, [])
@@ -81,71 +81,71 @@ function LectureEditPage(props) {
     }
     formData.append("file", files[0])
 
-    axios.post('/api/lectures/uploadThumnail', formData, config).then(response => {
+    axios.post('/api/studygroups/uploadThumnail', formData, config).then(response => {
       if (response.data.success) {
-       setLectureFilePath(response.data.url)
+       setStudyGroupFilePath(response.data.url)
       } else {
-        setFormErrorMessage('Lecture Thumnail Upload Error! Check out your input')
+        setFormErrorMessage('Study Group Thumnail Upload Error! Check out your input')
       }
     })
     .catch(err => {
-      setFormErrorMessage('Lecture Thumnail Upload Error! Check out your input')
+      setFormErrorMessage('Study Group Thumnail Upload Error! Check out your input')
       setTimeout(() => {
         setFormErrorMessage("")
       }, 3000);
     });
   }
 
-  if(LectureDetail.teacher && user.userData) {
+  if(StudyGroupDetail.manager && user.userData) {
       return (
           <Formik
             initialValues={{
-              _id: LectureDetail._id,
-              teacher: user.userData._id,
-              title: LectureDetail.title,
-              description: LectureDetail.description,
-              contactInfo: LectureDetail.contactInfo,
-              capacity: LectureDetail.capacity,
-              filePath: LectureFilePath
+              _id: StudyGroupDetail._id,
+              manager: user.userData._id,
+              title: StudyGroupDetail.title,
+              description: StudyGroupDetail.description,
+              contactInfo: StudyGroupDetail.contactInfo,
+              capacity: StudyGroupDetail.capacity,
+              filePath: StudyGroupFilePath
             }}
             validationSchema={Yup.object().shape({
-              teacher: Yup.string(),
+              manager: Yup.string(),
               title: Yup.string()
-                .required('Lecture title is required'),
+                .required('Study Group title is required'),
               description: Yup.string()
-                .required('Lecture description is required')
+                .required('Study Group description is required')
                 .min(10, 'description must be at least 10 characters'),
               contactInfo: Yup.string()
                 .required('Contact infomation is required'),
               capacity: Yup.number()
-                .required('Lecture capacity is required'),
+                .required('Study Group capacity is required'),
               filePath: Yup.string()
             })}
             onSubmit={(values, { setSubmitting }) => {
               setTimeout(() => {
 
                 let dataToSubmit = {
-                  _id: LectureDetail._id,
-                  teacher: user.userData._id,
+                  _id: StudyGroupDetail._id,
+                  manager: user.userData._id,
                   title: values.title,
                   description: values.description,
                   contactInfo: values.contactInfo,
                   capacity: values.capacity,
-                  filePath: LectureFilePath
+                  filePath: StudyGroupFilePath
                 };
 
-                dispatch(editLecture(dataToSubmit)).then(response => {
+                dispatch(editStudyGroup(dataToSubmit)).then(response => {
                   if (response.payload.success) {
-                    message.success('Lecture has been edited successfully')
+                    message.success('Study Group has been edited successfully')
                     setTimeout(() => {
                       navigate('/')
                     }, 2000)
                   } else {
-                    setFormErrorMessage('Lecture Edit Error! Check out your input')
+                    setFormErrorMessage('Study Group Edit Error! Check out your input')
                   }
                 })
                 .catch(err => {
-                  setFormErrorMessage('Lecture Edit Error! Check out your input')
+                  setFormErrorMessage('Study Group Edit Error! Check out your input')
                   setTimeout(() => {
                     setFormErrorMessage("")
                   }, 3000);
@@ -170,7 +170,7 @@ function LectureEditPage(props) {
               return (
                 <div className="app" style={{ minWidth: '575px',maxWidth: '1000px', margin: '2rem auto' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2rme' }}>
-                  <Title level={2}>Edit Lecture</Title>
+                  <Title level={2}>Edit Study Group</Title>
                 </div>
                 <br />
                 <div>
@@ -187,9 +187,9 @@ function LectureEditPage(props) {
                             </div>
                           )}
                         </Dropzone>
-                        { LectureFilePath &&
+                        { StudyGroupFilePath &&
                           <div style={{ display: 'flex', maxHeight: '500px', maxWidth: '700px' }}>
-                            <img src={`http://localhost:3001/${LectureFilePath}`} alt="thumanail_lecuture" />
+                            <img src={`http://localhost:3001/${StudyGroupFilePath}`} alt="thumanail_lecuture" />
                           </div>
                         }
                       </div>
@@ -198,7 +198,7 @@ function LectureEditPage(props) {
                     <Form.Item required label="Title">
                         <Input
                           id="title"
-                          placeholder="Enter new title of your lecture"
+                          placeholder="Enter new title of your study group"
                           type="text"
                           value={values.title}
                           onChange={handleChange}
@@ -215,7 +215,7 @@ function LectureEditPage(props) {
                     <Form.Item required label="Description">
                       <Input
                         id="description"
-                        placeholder="Enter new description of your lecture"
+                        placeholder="Enter new description of your study group"
                         type="text"
                         value={values.description}
                         onChange={handleChange}
@@ -249,7 +249,7 @@ function LectureEditPage(props) {
                     <Form.Item required label="Capacity" hasFeedback validateStatus={errors.capacity && touched.capacity ? "error" : 'success'}>
                       <Input
                         id="capacity"
-                        placeholder="Modify capacity of your lecture"
+                        placeholder="Modify capacity of your study group"
                         type="number"
                         value={values.capacity}
                         onChange={handleChange}
@@ -285,4 +285,4 @@ function LectureEditPage(props) {
 };
 
 
-export default withRouter(LectureEditPage);
+export default withRouter(StudyGroupEditPage);

@@ -6,10 +6,14 @@ import LandingPage from "./views/LandingPage/LandingPage.js";
 import LoginPage from "./views/LoginPage/LoginPage.js";
 import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import NavBar from "./views/NavBar/NavBar";
-import LectureUploadPage from "./views/LectureUploadPage/LectureUploadPage.js";
-import LecturePage from "./views/LecturePage/LecturePage.js";
-import LectureDetailPage from "./views/LectureDetailPage/LectureDetailPage.js";
-import LectureEditPage from "./views/LectureEditPage/LectureEditPage";
+import LecturePage from "./views/Lectures/LecturePage/LecturePage.js";
+import LectureUploadPage from "./views/Lectures/LectureUploadPage/LectureUploadPage.js";
+import LectureDetailPage from "./views/Lectures/LectureDetailPage/LectureDetailPage.js";
+import LectureEditPage from "./views/Lectures/LectureEditPage/LectureEditPage";
+import StudyGroupUploadPage from "./views/StudyGroups/StudyGroupUploadPage/StudyGroupUploadPage.js";
+import StudyGroupPage from "./views/StudyGroups/StudyGroupPage/StudyGroupPage.js";
+import StudyGroupDetailPage from "./views/StudyGroups/StudyGroupDetailPage/StudyGroupDetailPage.js";
+import StudyGroupEditPage from "./views/StudyGroups/StudyGroupEditPage/StudyGroupEditPage";
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
@@ -29,6 +33,10 @@ function App() {
             <Route path="/lectures/register" element={Auth(LectureUploadPage, true)} />
             <Route path="/lectures/:lectureId" element={Auth(LectureDetailPage, true)} />
             <Route path="/lectures/:lectureId/edit" element={Auth(LectureEditPage, true)} />
+            <Route path="/studygroups" element={Auth(StudyGroupPage, true)} />
+            <Route path="/studygroups/register" element={Auth(StudyGroupUploadPage, true)} />
+            <Route path="/studygroups/:studygroupId" element={Auth(StudyGroupDetailPage, true)} />
+            <Route path="/studygroups/:studygroupId/edit" element={Auth(StudyGroupEditPage, true)} />
           </Routes>
         </div>
       </Suspense>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { registerLecture } from "../../../_actions/lecture_actions";
+import { registerLecture } from "../../../../_actions/lecture_actions";
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Form, Input, Button, Typography, message, InputNumber, Icon } from 'antd';
